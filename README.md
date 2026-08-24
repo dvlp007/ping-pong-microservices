@@ -73,6 +73,25 @@ mvn test
 docker compose up -d
 ```
 
+## 数据库
+
+`docker compose up -d` 会一并启动 Kafka、PostgreSQL 16 和 MongoDB 7。单独启动数据库也可以使用以下命令：
+
+```bash
+docker run -d --name pong-postgres \
+  -e POSTGRES_DB=pong_db \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=postgres \
+  -p 5432:5432 \
+  postgres:16
+
+docker run -d --name pong-mongodb \
+  -p 27017:27017 \
+  mongo:7
+```
+
+`pong-service` 收到 Kafka 消息后，会同时把请求记录写入 PostgreSQL 的 `request_log` 表和 MongoDB 的 `request_logs` 集合。
+
 ## 目录结构
 
 ```text
@@ -83,4 +102,3 @@ ping-pong-microservices/
 ├── pong-service/           # Pong 服务
 └── README.md
 ```
-

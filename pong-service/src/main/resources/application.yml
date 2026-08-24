@@ -7,6 +7,16 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pong_db
+    username: postgres
+    password: postgres
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/pong_db
+  sql:
+    init:
+      mode: always
 
 server:
   port: 8081
