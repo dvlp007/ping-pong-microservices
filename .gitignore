@@ -7,3 +7,6 @@ target/
 
 # Logs
 *.log
+
+# Runtime lock file
+ping-rate-limit.lock

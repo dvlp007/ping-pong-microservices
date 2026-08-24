@@ -14,13 +14,19 @@ public class PingService {
     private static final Logger log = LoggerFactory.getLogger(PingService.class);
 
     private final WebClient webClient;
+    private final RateLimitService rateLimitService;
 
-    public PingService(@Value("${pong.url}") String pongUrl) {
+    public PingService(@Value("${pong.url}") String pongUrl, RateLimitService rateLimitService) {
         this.webClient = WebClient.builder().baseUrl(pongUrl).build();
+        this.rateLimitService = rateLimitService;
     }
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 900)
     public void sendHello() {
+        if (!rateLimitService.tryAcquire()) {
+            log.info("RATE_LIMITED | Request not sent - global rate limit reached");
+            return;
+        }
         webClient.post()
                 .uri("/pong")
                 .contentType(MediaType.TEXT_PLAIN)
