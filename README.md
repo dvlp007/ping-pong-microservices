@@ -14,8 +14,8 @@
 
 | 模块 | 说明 |
 | --- | --- |
-| `ping-service` | 提供 Ping 接口，并调用 `pong-service` 获取响应 |
-| `pong-service` | 提供 Pong 接口，回应来自 `ping-service` 的请求 |
+| `ping-service` | 每秒定时通过 WebClient 向 `pong-service` 发送 "Hello" |
+| `pong-service` | 提供 POST `/pong` 接口，回应 "World" |
 
 父 POM 通过 `modules` 聚合子模块，统一管理公共依赖版本与 Java 17 配置；子模块按需声明自己的依赖。
 
@@ -47,10 +47,10 @@ mvn spring-boot:run
 ## 调用流程
 
 ```text
-Client
-  -> GET /ping        (ping-service)
-  -> GET /pong        (pong-service)
-  <- Pong response
+ping-service (8080)
+  --POST "Hello" /pong--> pong-service (8081)
+  <--"World"------------ pong-service
+  日志: SUCCESS | Sent Hello, Pong responded: World
 ```
 
 ## 测试
