@@ -14,7 +14,7 @@
 
 | 模块 | 说明 |
 | --- | --- |
-| `ping-service` | 每秒定时通过 WebClient 向 `pong-service` 发送 "Hello" |
+| `ping-service` | 定时通过 WebClient 调用 `pong-service`，并每秒向 `ping-pong-topic` 发送 Kafka 消息 |
 | `pong-service` | 提供 POST `/pong` 接口，回应 "World" |
 
 父 POM 通过 `modules` 聚合子模块，统一管理公共依赖版本与 Java 17 配置；子模块按需声明自己的依赖。
@@ -61,18 +61,26 @@ ping-service (8080)
 mvn test
 ```
 
+## Kafka 消息队列
+
+- `ping-service` 每秒通过 `KafkaProducerService` 自动向 `ping-pong-topic` 发送消息
+- `pong-service` 通过 `KafkaConsumerService` 消费该 Topic，并调用 `PongService` 处理
+- Topic：`ping-pong-topic`，消费组：`pong-group`
+
+启动 Kafka（KRaft 模式，无需 Zookeeper）：
+
+```bash
+docker compose up -d
+```
+
 ## 目录结构
 
 ```text
 ping-pong-microservices/
+├── docker-compose.yml       # Kafka 单节点（KRaft 模式）
 ├── pom.xml                 # 父 POM，声明模块与公共依赖
 ├── ping-service/           # Ping 服务
 ├── pong-service/           # Pong 服务
 └── README.md
 ```
 
-## 后续计划
-
-- 完成两个服务模块的源码与启动类
-- 通过 WebClient 实现 Ping -> Pong 的服务间调用
-- 补充服务健康检查与基础配置

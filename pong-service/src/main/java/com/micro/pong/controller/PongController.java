@@ -24,10 +24,10 @@ public class PongController {
 
     @PostMapping(value = "/pong", produces = MediaType.TEXT_PLAIN_VALUE)
     public Mono<ResponseEntity<String>> handlePing(@RequestBody String message) {
-        log.info("Received: {}", message);
         if (!throttleService.tryProcess()) {
             return Mono.just(ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body("Throttled"));
         }
+        log.info("Received: {}", message);
         return Mono.just(ResponseEntity.ok("World"));
     }
 }
