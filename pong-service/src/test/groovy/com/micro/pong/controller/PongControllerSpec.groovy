@@ -6,11 +6,13 @@ import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.test.annotation.DirtiesContext
+import org.springframework.test.context.TestPropertySource
 import org.springframework.test.web.reactive.server.WebTestClient
 import spock.lang.Specification
 
 @WebFluxTest(PongController.class)
 @Import(ThrottleService.class)
+@TestPropertySource(properties = "pong.throttle.distributed=false")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class PongControllerSpec extends Specification {
 
