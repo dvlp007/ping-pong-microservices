@@ -6,8 +6,8 @@ services:
       - "9092:9092"
     volumes:
       - kafka-data:/var/lib/kafka/data
-      - kafka-logs:/var/lib/kafka/logs
-      - kafka-tmp:/tmp/kafka-logs
+      - kafka-secrets:/etc/kafka/secrets
+      - kafka-config:/mnt/shared/config
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
@@ -26,7 +26,7 @@ services:
     image: postgres:16
     container_name: ping-pong-postgres
     ports:
-      - "5433:5433"
+      - "5433:5432"
     environment:
       POSTGRES_DB: pong_db
       POSTGRES_USER: postgres
@@ -38,13 +38,24 @@ services:
     image: mongo:7
     container_name: ping-pong-mongodb
     ports:
-      - "27018:27018"
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: pong
+      MONGO_INITDB_ROOT_PASSWORD: Pong@2026
     volumes:
       - mongodb-data:/data/db
+      - mongodb-configdb:/data/configdb
 
 volumes:
   kafka-data:
-  kafka-logs:
-  kafka-tmp:
+    name: ping-pong-kafka-data
+  kafka-secrets:
+    name: ping-pong-kafka-secrets
+  kafka-config:
+    name: ping-pong-kafka-config
   postgres-data:
+    name: ping-pong-postgres-data
   mongodb-data:
+    name: ping-pong-mongodb-data
+  mongodb-configdb:
+    name: ping-pong-mongodb-configdb

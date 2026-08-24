@@ -8,12 +8,12 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   datasource:
-    url: jdbc:postgresql://localhost:5432/pong_db
+    url: jdbc:postgresql://localhost:5433/pong_db
     username: postgres
     password: postgres
   data:
     mongodb:
-      uri: mongodb://localhost:27017/pong_db
+      uri: mongodb://pong:Pong%402026@localhost:27018/pong_db?authSource=admin
   sql:
     init:
       mode: always

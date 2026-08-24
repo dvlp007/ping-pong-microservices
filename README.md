@@ -75,18 +75,20 @@ docker compose up -d
 
 ## 数据库
 
-`docker compose up -d` 会一并启动 Kafka、PostgreSQL 16 和 MongoDB 7。单独启动数据库也可以使用以下命令：
+`docker compose up -d` 会一并启动 Kafka、PostgreSQL 16 和 MongoDB 7。为避免与本机已有的 `5432`、`27017` 冲突，Docker 内数据库分别发布到宿主机 `5433`、`27018`。单独启动数据库也可以使用以下命令：
 
 ```bash
 docker run -d --name pong-postgres \
   -e POSTGRES_DB=pong_db \
   -e POSTGRES_USER=postgres \
   -e POSTGRES_PASSWORD=postgres \
-  -p 5432:5432 \
+  -p 5433:5432 \
   postgres:16
 
 docker run -d --name pong-mongodb \
-  -p 27017:27017 \
+  -e MONGO_INITDB_ROOT_USERNAME=pong \
+  -e MONGO_INITDB_ROOT_PASSWORD=Pong@2026 \
+  -p 27018:27017 \
   mongo:7
 ```
 
