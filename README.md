@@ -80,12 +80,12 @@ java -jar ping-service/target/ping-service-1.0.0.jar
 
 ### Step 4: Multi-Instance Mode
 
-启动 3 个 Ping Service 实例，验证 FileLock 跨进程限流：
+启动 3 个 Ping Service 实例，验证 FileLock 跨进程限流。三个实例必须从项目根目录启动，才能共享同一个 `ping-rate-limit.lock`；同时需要指定不同端口（避开 Pong 的 `8081`）：
 
 ```bash
-java -jar ping-service/target/ping-service-1.0.0.jar &
-java -jar ping-service/target/ping-service-1.0.0.jar &
-java -jar ping-service/target/ping-service-1.0.0.jar &
+java -jar ping-service/target/ping-service-1.0.0.jar --server.port=8080 &
+java -jar ping-service/target/ping-service-1.0.0.jar --server.port=8082 &
+java -jar ping-service/target/ping-service-1.0.0.jar --server.port=8083 &
 ```
 
 启动 2 个 Pong Service 实例，验证 Hazelcast 分布式限流：
