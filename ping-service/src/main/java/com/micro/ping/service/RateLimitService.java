@@ -40,7 +40,7 @@ public class RateLimitService {
     }
 
     public synchronized boolean tryAcquire() {
-        try (FileLock ignored = fileChannel.tryLock()) {
+        try (FileLock ignored = fileChannel.lock()) {
             if (ignored == null) {
                 return false;
             }
